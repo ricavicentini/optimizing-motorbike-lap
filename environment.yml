@@ -1,0 +1,10 @@
+name: ag_motorbike
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - numpy
+  - scipy
+  - matplotlib
+  - deap
+  - notebook
