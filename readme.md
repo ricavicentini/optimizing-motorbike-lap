@@ -1,63 +1,78 @@
-# Academic Project: Motorbike Lap Optimization with Genetic Algorithms
+# Motorbike Lap Optimization with Genetic Algorithms
 
-## 1. Project Objective  
-This is a proof-of-concept study for an academic course in Artificial Intelligence. Our goal is to demonstrate the feasibility of using Genetic Algorithms (GAs) to minimize lap time on a closed motorcycle circuit. Given a simplified physical model of a bike and a digital representation of a race track, we will evolve trajectories that outperform a basic baseline.
+## Overview
+This project uses Genetic Algorithms to optimize motorcycle lap times on a closed circuit. It's a proof-of-concept study demonstrating how AI can discover better racing trajectories than basic heuristics.
 
-Key research questions:  
-- Can a GA discover a lap trajectory that improves on a human-inspired or heuristic reference?  
-- How do GA parameters (population size, mutation rate, crossover rate) influence convergence speed and solution quality?  
-- What is the trade-off between model simplicity (point-mass dynamics) and optimization performance?
+## Current Status
+- ✅ Track visualization with spline interpolation
+- ✅ Physics simulation with speed profiles
+- ✅ Animation showing acceleration/braking points (colored path)
+- ✅ Lap time estimation
+- 🚧 Genetic Algorithm optimization (in progress)
 
-## 2. Scope and Constraints  
-- **Timeframe:** 6 weeks of active development (25 June – 5 August) with ~5 hours/week.  
-- **Model Fidelity:** Simplified “point-mass” or “bicycle” dynamics; no complex tire or suspension models.  
-- **Optimization Target:** Single objective—minimize lap time. Secondary metrics (curve smoothness, violation count) may be logged but not optimized.  
-- **Proof of Concept:** Code clarity and reproducibility are more important than industrial-grade performance.
+## Quick Start
+```bash
+# Install conda (if not already installed)
+conda activate ag_motorbike
+python src/visualization.py  # Watch animated lap simulation
+python src/main.py --track-location tracks/waypoints_S.csv  # Plot track with lap time
+```
 
-## 3. Methodology  
-1. **Track Definition**  
-   - Load or synthesize waypoints (CSV)  
-   - Build a closed spline (Bezier or SciPy `splprep`)  
-2. **Dynamics Simulation**  
-   - Discretize spline into segments  
-   - Compute curvature and maximum cornering speed from friction limit  
-   - Integrate a simple point-mass model to estimate lap time  
-3. **Genetic Algorithm Design**  
-   - **Chromosome:** lateral offsets or control-point perturbations along the track  
-   - **Population:** random perturbations around a reference line  
-   - **Fitness Function:** simulated lap time + penalty for physics violations  
-   - **Operators:** tournament selection, uniform crossover, Gaussian mutation  
-   - **Termination:** fixed generation budget or plateau in fitness improvement  
-4. **Experimentation**  
-   - Tune GA hyperparameters (population size, mutation rate)  
-   - Compare best GA solution against baseline trajectory  
-   - Analyze convergence curves and sensitivity  
+## Project Goals
+- **Primary**: Minimize lap time using Genetic Algorithms
+- **Research Questions**:
+  - Can GA discover better trajectories than baseline approaches?
+  - How do GA parameters affect convergence and solution quality?
+  - What's the trade-off between model simplicity and optimization performance?
 
-## 4. Deliverables  
-- **Source Code Repository** (Python, Conda environment)  
-- **Final Report (English)** detailing introduction, methodology, results, discussion, and conclusions  
-- **Plots & Tables:**  
-  - Evolution of best/average fitness per generation  
-  - Overlay of baseline vs. GA-optimized trajectories  
-  - Summary of parameter sensitivity  
-- **README.md** with setup & usage instructions  
+## Technical Approach
 
-## 5. Timeline (25 June – 5 August)  
-| Week | Dates          | Milestone                                    |
-|------|----------------|----------------------------------------------|
-| 1    | Jun 25–Jul 1   | Environment & track loader; baseline fitness |
-| 2    | Jul 2–8        | Dynamics simulation prototype                |
-| 3    | Jul 9–15       | GA scaffold (DEAP) + basic fitness integration|
-| 4    | Jul 16–22      | GA tuning & debugging                        |
-| 5    | Jul 23–29      | Experiments & data collection                |
-| 6    | Jul 30–Aug 5   | Report writing & final presentations         |
+### 1. Track Representation
+- Load waypoints from CSV files
+- Generate smooth splines using SciPy
+- Discretize into segments for physics simulation
 
-## 6. Tools & Technologies  
-- **Language:** Python 3.9  
-- **Conda** (environment management)  
-- **NumPy / SciPy** (numerical computation & splines)  
-- **Matplotlib / Seaborn** (visualization)  
-- **DEAP** (Genetic Algorithm framework)  
-- **Git / GitHub** (version control)
+### 2. Physics Model
+- Simplified point-mass dynamics
+- Curvature-based speed limits from friction constraints
+- Forward/backward pass speed optimization
 
-## 7. Repository Layout  
+### 3. Genetic Algorithm (Planned)
+- **Chromosome**: Lateral offsets or control points along track
+- **Fitness**: Lap time + penalty for physics violations
+- **Operators**: Tournament selection, uniform crossover, Gaussian mutation
+
+## Project Structure
+```
+src/
+├── main.py           # Main entry point
+├── track_loader.py   # Track loading and visualization
+├── dynamics.py       # Physics simulation
+└── visualization.py  # Animated lap visualization
+
+tracks/               # Track data files
+├── waypoints_S.csv   # Sample track
+```
+
+## Development Timeline (6 weeks)
+| Week | Focus |
+|------|-------|
+| 1-2  | Track loading, physics simulation |
+| 3-4  | Genetic Algorithm implementation |
+| 5    | Parameter tuning and experiments |
+| 6    | Analysis and documentation |
+
+## Technologies
+- **Python 3.9** with Conda
+- **NumPy/SciPy** for numerical computation
+- **Matplotlib** for visualization
+- **DEAP** for Genetic Algorithms (planned)
+
+## Known Issues
+- Wayland display issues on WSL2 (use `export DISPLAY=:0` if needed)
+- Animation requires GUI backend for matplotlib
+
+---
+*Academic project for AI course - proof of concept implementation*
+
+
