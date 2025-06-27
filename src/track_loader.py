@@ -19,7 +19,7 @@ def build_spline(x, y, num_points=500):
     x_s, y_s = splev(u, tck)
     return x_s, y_s
 
-def plot_track(x, y, x_s, y_s):
+def plot_track(x, y, x_s, y_s, lap_time=None):
     """Plot the original waypoints and the smoothed spline track."""
     plt.figure(figsize=(10, 8))
     plt.plot(x, y, 'bo-', label='Original waypoints', markersize=4)
@@ -27,7 +27,21 @@ def plot_track(x, y, x_s, y_s):
     plt.axis('equal')
     plt.grid(True, alpha=0.3)
     plt.legend()
-    plt.title('Track Layout')
+    
+    # Add lap time to title if provided
+    if lap_time is not None:
+        plt.title(f'Track Layout - Estimated Lap Time: {lap_time:.2f}s')
+    else:
+        plt.title('Track Layout')
+    
     plt.xlabel('X coordinate')
     plt.ylabel('Y coordinate')
+    
+    # Add lap time as text on the plot
+    if lap_time is not None:
+        plt.text(0.02, 0.98, f'Lap Time: {lap_time:.2f}s', 
+                transform=plt.gca().transAxes, 
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8),
+                verticalalignment='top', fontsize=12, fontweight='bold')
+    
     plt.show()

@@ -1,6 +1,7 @@
 # src/main.py
 import argparse
 import os
+from dynamics import compute_lap_time
 from track_loader import list_tracks, load_waypoints, build_spline, plot_track
 
 def main():
@@ -28,7 +29,9 @@ def main():
     # Carrega e plota
     x, y = load_waypoints(track_path)
     x_s, y_s = build_spline(x, y)
-    plot_track(x, y, x_s, y_s)
+    t0 = compute_lap_time(x_s, y_s)
+    plot_track(x, y, x_s, y_s, lap_time=t0)
+    print(f"Estimated lap time (s): {t0:.2f}")
 
 if __name__ == "__main__":
     main()
