@@ -9,15 +9,16 @@ from dynamics import (
     compute_curvature, compute_speed_limits,
     compute_segment_lengths, speed_profile_two_pass
 )
-from logger import log_waypoints, log_spline_info, log_dynamics_info, log_track_summary
+from track_reporter import log_waypoints, log_spline_info, log_dynamics_info, log_track_summary
+from logger_setup import setup_logger
 
-def prepare_track(num_points=500):
+def prepare_track(num_points=500, logger=None):
     # 1) Load & spline
     x, y = load_waypoints("tracks/waypoints_S.csv")
-    log_waypoints(x, y)
+    log_waypoints(x, y, logger=logger)
     
     x_s, y_s = build_spline(x, y, num_points=num_points)
-    log_spline_info(x_s, y_s)
+    log_spline_info(x_s, y_s, logger=logger)
 
     # 2) Dynamics
     kappa    = compute_curvature(x_s, y_s)
@@ -36,12 +37,15 @@ def prepare_track(num_points=500):
     a_long = dv / np.concatenate([[dt[-1]], dt[:-1]])
     
     # Log dynamics and track summary
-    log_dynamics_info(v_profile, t_cum, kappa)
-    log_track_summary(x, y, x_s, y_s, v_profile, t_cum)
+    log_dynamics_info(v_profile, t_cum, kappa, logger=logger)
+    log_track_summary(x, y, x_s, y_s, v_profile, t_cum, logger=logger)
 
     return x_s, y_s, v_profile, a_long, kappa, t_cum
 
-def animate_track(x_s, y_s, v, a, kappa, t_cum):
+def animate_track(x_s, y_s, v, a, kappa, t_cum, logger=None):
+    if logger:
+        logger.info("Starting lap animation visualization")
+    
     fig, ax = plt.subplots(figsize=(8,8))
     ax.plot(x_s, y_s, 'k-', lw=1, alpha=0.5)
     
@@ -86,7 +90,7 @@ def animate_track(x_s, y_s, v, a, kappa, t_cum):
         # frame is an index into the spline arrays
         i = frame % len(x_s)
         bike.set_data([x_s[i]], [y_s[i]])
-        speed_text.set_text(f"Speed: {v[i]:.1f} m/s")
+        speed_text.set_text(f"Speed: {v[i]*3.6:.1f} km/h")
         accel_text.set_text(f"Accel: {a[i]:+.2f} m/s²")
         curvature_text.set_text(f"Curv: {kappa[i]:.3f} 1/m")
         lap_time_text.set_text(f"Lap time: {t_cum[i]:.2f} s")
@@ -102,5 +106,16 @@ def animate_track(x_s, y_s, v, a, kappa, t_cum):
     plt.show()
 
 if __name__ == "__main__":
-    x_s, y_s, v_profile, a_long, kappa, t_cum = prepare_track(num_points=500)
-    animate_track(x_s, y_s, v_profile, a_long, kappa, t_cum)
+    # Setup logger for file output  
+    import os
+    os.makedirs("outputs/logs", exist_ok=True)
+    main_logger = setup_logger()
+    main_logger.info("Starting visualization")
+    
+    # Prepare track data with logging
+    x_s, y_s, v_profile, a_long, kappa, t_cum = prepare_track(num_points=500, logger=main_logger)
+    
+    # Start animation
+    animate_track(x_s, y_s, v_profile, a_long, kappa, t_cum, logger=main_logger)
+    
+    main_logger.info("Visualization completed")
