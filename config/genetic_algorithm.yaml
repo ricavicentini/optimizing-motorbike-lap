@@ -1,0 +1,37 @@
+# config/genetic_algorithm.yaml
+# Genetic Algorithm Configuration for Lap Time Optimization
+
+# Population parameters
+population:
+  size: 100                    # Number of individuals in population
+  hall_of_fame_size: 5        # Top N individuals to keep in hall of fame
+
+# Evolution parameters  
+evolution:
+  generations: 100            # Number of generations to run
+  crossover_probability: 0.7  # Probability of crossover (CXPB)
+  mutation_probability: 0.2   # Probability of mutation (MUTPB)
+
+# Individual representation
+individual:
+  gene_count: 10             # Number of genes per individual
+  gene_bounds:
+    min: -5.0                # Minimum gene value
+    max: 5.0                 # Maximum gene value
+
+# Optimization target
+objective:
+  minimize: true             # True = minimize lap time, False = maximize
+  target_metric: "lap_time"  # What we're optimizing
+
+# Logging and output
+logging:
+  show_progress: true        # Print generation progress
+  show_statistics: true      # Show best/avg per generation
+  show_hall_of_fame: true    # Print hall of fame at end
+  
+# Advanced parameters (optional)
+advanced:
+  selection_method: "tournament"  # Selection algorithm
+  tournament_size: 3             # For tournament selection
+  elite_size: 2                  # Number of elites to preserve 

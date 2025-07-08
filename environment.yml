@@ -8,3 +8,4 @@ dependencies:
   - matplotlib
   - deap
   - notebook
+  - pyyaml  # Para configuração YAML do genetic_optimizer
